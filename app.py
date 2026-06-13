@@ -5,12 +5,33 @@ import time
 import base64
 import os
 st.markdown("""
+    <style>
+        /* Landscape mode ke liye force karna */
+        @media screen and (orientation: portrait) {
+            body {
+                transform: rotate(90deg);
+                transform-origin: left top;
+                width: 100vh;
+                height: 100vw;
+                overflow-x: hidden;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)
+st.markdown("""
     <head>
         <link rel="manifest" href="static/manifest.json">
     </head>
 """, unsafe_allow_html=True)
 # --- Page Configuration ---
-st.set_page_config(page_title="EVS Quiz App", layout="wide")
+st.set_page_config(
+    page_title="EVS Quiz App",
+    page_icon=static/logo.png",
+ layout="wide"
+)
 
 # --- CSS for UI ---
 st.markdown("""
