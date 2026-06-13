@@ -8,6 +8,36 @@ import os
 # --- Page Configuration ---
 st.set_page_config(page_title="EVS Quiz App", layout="wide")
 
+# --- CSS for UI ---
+st.markdown("""
+    <style>
+    #MainMenu, header, footer {visibility: hidden;}
+    
+    [data-testid="stVerticalBlock"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .stButton > button {
+        padding: 20px 40px;
+        font-size: 20px;
+    }
+    
+    .block-container {
+        padding: 2rem !important; 
+        background: rgba(255, 255, 255, 0.7); 
+        border-radius: 20px;
+    }
+    
+    /* Audio bar hide karne ke liye */
+    audio {
+        display: none !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # --- Background Image Function ---
 def add_bg(image_file):
     if os.path.exists(image_file):
@@ -23,16 +53,9 @@ def add_bg(image_file):
                 background-repeat: no-repeat;
                 background-attachment: fixed;
             }}
-            /* Force black font */
             p, div, label, h1, h2, h3, .stRadio label {{
                 color: black !important;
                 font-weight: bold !important;
-            }}
-            /* Transparent containers to see background */
-            .block-container {{
-                background: rgba(255, 255, 255, 0.7);
-                border-radius: 20px;
-                padding: 2rem !important;
             }}
             </style>
             """,
@@ -78,6 +101,7 @@ elif st.session_state.step == 'register':
 
 elif st.session_state.step == 'quiz':
     add_bg("wallpaper.jpg")
+    # Audio loop mein aur hidden
     st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     
     idx = st.session_state.current_q_index
@@ -104,6 +128,8 @@ elif st.session_state.step == 'quiz':
 
 elif st.session_state.step == 'end':
     add_bg("wallpaper.jpg")
+    # Audio yahan bhi loop mein aur hidden
+    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     st.success(f"Well done {st.session_state.name}!")
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
     
