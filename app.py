@@ -29,7 +29,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
     <head>
-        <link rel="site.webmanifest" href="static/site.webmanifest">
+        <link rel="manifest" href="static/site.webmanifest">
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('static/service-worker.js')
+                .then(() => console.log('Service Worker registered!'));
+            }
+        </script>
     </head>
 """, unsafe_allow_html=True)
 # --- Page Configuration ---
