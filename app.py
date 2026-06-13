@@ -6,7 +6,7 @@ import base64
 import os
 st.markdown("""
     <head>
-        <link rel="manifest" href="app/static/manifest.json">
+        <link rel="manifest" href="static/manifest.json">
     </head>
 """, unsafe_allow_html=True)
 # --- Page Configuration ---
