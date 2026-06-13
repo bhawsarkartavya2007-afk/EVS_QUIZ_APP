@@ -29,7 +29,7 @@ st.markdown("""
 # --- Page Configuration ---
 st.set_page_config(
     page_title="EVS Quiz App",
-    page_icon=static/logo.png",
+    page_icon="static/logo.png",
  layout="wide"
 )
 
