@@ -27,9 +27,9 @@ st.markdown("""
     
     .block-container {
         padding: 2rem !important; 
-        background: rgba(255, 255, 255, 0.7); 
+        background: rgba(255, 255, 255, 1.0); 
         border-radius: 20px;
-        border: 2px solid rgba(0,0,0,0.1)
+        border: 2px solid rgba(0,0,0,0.9)
     }
     
     /* Audio bar hide karne ke liye */
