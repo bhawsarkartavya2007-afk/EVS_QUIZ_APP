@@ -27,7 +27,7 @@ st.markdown("""
     
     .block-container {
         padding: 2rem !important; 
-        background: rgba(255, 255, 255, 1.0); 
+        background: rgba(255, 255, 255, 0.4); 
         border-radius: 20px;
         border: 2px solid rgba(0,0,0,0.9)
     }
@@ -40,7 +40,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- Background Image Function ---
-def add_bg(image_file):
+def add_bg(imagee_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
