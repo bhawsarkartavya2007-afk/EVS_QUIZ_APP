@@ -35,7 +35,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- Background Image Function (Mobile Optimized & Black Text) ---
-def add_bg(wallpaper.jpg):
+def add_bg("wallpaper.jpg"):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
