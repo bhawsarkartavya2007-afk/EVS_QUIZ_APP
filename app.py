@@ -9,29 +9,27 @@ import os
 st.set_page_config(page_title="EVS Quiz App", layout="wide")
 
 # --- CSS for Full Screen and Centering ---
-st.markdown("""
-    <style>
-    #MainMenu, header, footer {visibility: hidden;}
+if 'intro_done' not in st.session_state:
+    st.session_state.intro_done = False
+
+if not st.session_state.intro_done:
+    # This shows the video first
+    st.video("intro.mp4")
+    # This button switches the state when clicked
+    if st.button("Start Quiz"):
+        st.session_state.intro_done = True
+        st.rerun() 
+else:
+    # This shows the background and text after the video
+    add_bg("wallpaper.jpg")
     
-    /* Center the Start button vertically and horizontally */
-    [data-testid="stVerticalBlock"] {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    
-    .stButton > button {
-        padding: 20px 40px;
-        font-size: 20px;
-    }
-    
-    .block-container {
-        padding: 2rem !important; 
-        background: rgba(255, 255, 255, 0.8); 
-        border-radius: 20px;
-    }
-    </style>
+    # CSS to ensure text remains black/visible
+    st.markdown("""
+        <style>
+            p, div, label, h1, h2, h3 {
+                color: black !important;
+            }
+        </style>
     """, unsafe_allow_html=True)
 
 # --- Background Image Function ---
