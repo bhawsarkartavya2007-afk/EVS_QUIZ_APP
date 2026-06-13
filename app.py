@@ -13,7 +13,6 @@ st.markdown("""
     <style>
     #MainMenu, header, footer {visibility: hidden;}
     
-    /* Center the Start button */
     [data-testid="stVerticalBlock"] {
         display: flex;
         justify-content: center;
@@ -34,8 +33,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- Background Image Function (Mobile Optimized & Black Text) ---
-def add_bg("wallpaper.jpg"):
+# --- Background Image Function ---
+def add_bg(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
@@ -49,6 +48,7 @@ def add_bg("wallpaper.jpg"):
                 background-repeat: no-repeat;
                 background-attachment: fixed;
             }}
+            /* Black and Bold Font */
             p, div, label, h1, h2, h3, .stRadio label {{
                 color: black !important;
                 font-weight: bold !important;
@@ -125,6 +125,7 @@ elif st.session_state.step == 'quiz':
 
 elif st.session_state.step == 'end':
     add_bg("wallpaper.jpg")
+    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     st.success(f"Well done {st.session_state.name}!")
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
     
