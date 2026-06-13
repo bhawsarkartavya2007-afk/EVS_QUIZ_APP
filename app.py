@@ -8,12 +8,12 @@ import os
 # --- Page Configuration ---
 st.set_page_config(page_title="EVS Quiz App", layout="wide")
 
-# --- CSS for Full Screen and Centering ---
+# --- CSS for UI ---
 st.markdown("""
     <style>
     #MainMenu, header, footer {visibility: hidden;}
     
-    /* Center the Start button vertically and horizontally */
+    /* Center the Start button */
     [data-testid="stVerticalBlock"] {
         display: flex;
         justify-content: center;
@@ -34,21 +34,21 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- Updated Background Image Function (Mobile Optimized & Black Text) ---
+# --- Background Image Function (Mobile Optimized & Black Text) ---
 def add_bg(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
+        ext = "jpeg" if image_file.endswith(".jpg") or image_file.endswith(".jpeg") else "png"
         st.markdown(
             f"""<style>
             .stApp {{
-                background-image: url(data:image/jpeg;base64,{encoded});
+                background-image: url(data:image/{ext};base64,{encoded});
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
             }}
-            /* Font ko black aur bold karne ke liye */
             p, div, label, h1, h2, h3, .stRadio label {{
                 color: black !important;
                 font-weight: bold !important;
@@ -57,11 +57,11 @@ def add_bg(image_file):
             unsafe_allow_html=True
         )
 
-# --- Load and Clean Data ---
+# --- Load Data ---
 @st.cache_data
 def load_data():
     df = pd.read_excel("quiz_data.xlsx")
-    df.columns = df.columns.str.strip() # Removes extra spaces from headers
+    df.columns = df.columns.str.strip()
     return df.to_dict('records')
 
 # --- Session Initialization ---
@@ -76,6 +76,7 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
+    st.markdown("""<style>video {width: 100% !important; height: auto !important;}</style>""", unsafe_allow_html=True)
     st.video("intro.mp4", autoplay=True)
     time.sleep(10.3) 
     st.session_state.step = 'register'
