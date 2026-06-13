@@ -8,52 +8,34 @@ import os
 # --- Page Configuration ---
 st.set_page_config(page_title="EVS Quiz App", layout="wide")
 
-# --- CSS for UI ---
-st.markdown("""
-    <style>
-    #MainMenu, header, footer {visibility: hidden;}
-    
-    [data-testid="stVerticalBlock"] {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    
-    .stButton > button {
-        padding: 20px 40px;
-        font-size: 20px;
-    }
-    
-    .block-container {
-        padding: 2rem !important; 
-        background: rgba(255, 255, 255, 0.8); 
-        border-radius: 20px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 # --- Background Image Function ---
 def add_bg(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
-        ext = "jpeg" if image_file.endswith(".jpg") or image_file.endswith(".jpeg") else "png"
         st.markdown(
-            f"""<style>
+            f"""
+            <style>
             .stApp {{
-                background-image: url(data:image/{ext};base64,{encoded});
+                background: url(data:image/jpeg;base64,{encoded});
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
             }}
-            /* Black and Bold Font */
+            /* Force black font */
             p, div, label, h1, h2, h3, .stRadio label {{
                 color: black !important;
                 font-weight: bold !important;
             }}
-            </style>""",
+            /* Transparent containers to see background */
+            .block-container {{
+                background: rgba(255, 255, 255, 0.7);
+                border-radius: 20px;
+                padding: 2rem !important;
+            }}
+            </style>
+            """,
             unsafe_allow_html=True
         )
 
@@ -68,15 +50,13 @@ def load_data():
 if 'step' not in st.session_state:
     st.session_state.update(step='start_screen', current_q_index=0, user_answers={}, score=0, name="", selected_qs=[])
 
-# --- App Flow Logic ---
-
+# --- App Flow ---
 if st.session_state.step == 'start_screen':
     if st.button("Click to Start Experience"):
         st.session_state.step = 'intro'
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    st.markdown("""<style>video {width: 100% !important; height: auto !important;}</style>""", unsafe_allow_html=True)
     st.video("intro.mp4", autoplay=True)
     time.sleep(10.3) 
     st.session_state.step = 'register'
@@ -98,7 +78,6 @@ elif st.session_state.step == 'register':
 
 elif st.session_state.step == 'quiz':
     add_bg("wallpaper.jpg")
-    st.markdown("<style>audio {display:none;}</style>", unsafe_allow_html=True)
     st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     
     idx = st.session_state.current_q_index
@@ -125,7 +104,6 @@ elif st.session_state.step == 'quiz':
 
 elif st.session_state.step == 'end':
     add_bg("wallpaper.jpg")
-    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     st.success(f"Well done {st.session_state.name}!")
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
     
