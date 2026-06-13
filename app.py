@@ -4,7 +4,11 @@ import random
 import time
 import base64
 import os
-
+st.markdown("""
+    <head>
+        <link rel="manifest" href="app/static/manifest.json">
+    </head>
+""", unsafe_allow_html=True)
 # --- Page Configuration ---
 st.set_page_config(page_title="EVS Quiz App", layout="wide")
 
