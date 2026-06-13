@@ -21,8 +21,19 @@ st.markdown("""
     }
     
     .stButton > button {
-        padding: 20px 40px;
-        font-size: 20px;
+        padding: 15px 30px;
+        font-size: 18px;
+        background-color: white !important; 
+    color: black !important;             
+    border: 2px solid black !important;  
+    border-radius: 10px;
+    font-weight: bold !important;
+}
+
+.stButton > button:hover {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+    border: 2px solid black !important;
     }
     
     .block-container {
