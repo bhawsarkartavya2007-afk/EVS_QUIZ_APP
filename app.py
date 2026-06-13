@@ -23,7 +23,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
     <head>
-        <link rel="manifest" href="static/site.manifest.json">
+        <link rel="site.webmanifest" href="static/site.webmanifest">
     </head>
 """, unsafe_allow_html=True)
 # --- Page Configuration ---
