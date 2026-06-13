@@ -53,7 +53,7 @@ def add_bg(image_file):
                 background-position: center;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
-                filter: saturate(1.8) brightness(0.7)
+                filter: saturate(1.5) brightness(0.9)
             }}
             p, div, label, h1, h2, h3, .stRadio label {{
                 color: black !important;
