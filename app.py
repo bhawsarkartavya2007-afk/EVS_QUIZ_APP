@@ -13,17 +13,15 @@ if 'intro_done' not in st.session_state:
     st.session_state.intro_done = False
 
 if not st.session_state.intro_done:
-    # This shows the video first
-    st.video("intro.mp4")
-    # This button switches the state when clicked
+    st.video("intro.mp4", autoplay=True)
     if st.button("Start Quiz"):
         st.session_state.intro_done = True
         st.rerun() 
 else:
-    # This shows the background and text after the video
+    # 1. Background image apply karo
     add_bg("wallpaper.jpg")
     
-    # CSS to ensure text remains black/visible
+    # 2. Black font ka CSS (Jo tumne hataya, uski jagah ye aa jayega)
     st.markdown("""
         <style>
             p, div, label, h1, h2, h3 {
@@ -31,7 +29,6 @@ else:
             }
         </style>
     """, unsafe_allow_html=True)
-
 # --- Background Image Function ---
 def add_bg(image_file):
     if os.path.exists(image_file):
