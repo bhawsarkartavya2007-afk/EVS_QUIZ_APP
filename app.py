@@ -19,6 +19,12 @@ st.markdown("""
                 left: 0;
             }
         }
+        div[data-baseweb="input"] {
+        background-color: white !important;
+    }
+    div[data-baseweb="input"] input {
+        color: black !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 st.markdown("""
