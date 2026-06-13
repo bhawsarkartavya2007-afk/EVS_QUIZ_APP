@@ -27,7 +27,7 @@ st.markdown("""
     
     .block-container {
         padding: 2rem !important; 
-        background: rgba(255, 255, 255, 0.4); 
+        background: rgba(255, 255, 255, 0.2); 
         border-radius: 20px;
         border: 2px solid rgba(0,0,0,0.9)
     }
@@ -53,6 +53,7 @@ def add_bg(image_file):
                 background-position: center;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
+                filter: saturate(1.8) brightness(0.7)
             }}
             p, div, label, h1, h2, h3, .stRadio label {{
                 color: black !important;
