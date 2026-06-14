@@ -5,36 +5,52 @@ import time
 import base64
 import os
 
-# --- Page Setup ---
-st.set_page_config(page_title="EVS Quiz App", layout="wide")
+# Page Config
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
-# --- CSS Styling ---
+# --- Pura CSS Block (Landscape, White Box, Audio/Video Control) ---
 st.markdown("""
     <style>
-    /* Status bar aur extra white space hatane ke liye */
-    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
-    .stApp {
-        padding: 0 !important;
-        margin: 0 !important;
-        overflow-x: hidden !important;
+    /* 1. Landscape Warning */
+    @media only screen and (orientation: portrait) {
+        .portrait-warning { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: white; z-index: 99999; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: black; text-align: center; padding: 20px; }
     }
-    header {visibility: hidden !important;}
-    footer {visibility: hidden !important;}
+    @media only screen and (orientation: landscape) { .portrait-warning { display: none; } }
     
-    /* Intro video full screen ke liye */
-    .video-full {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        z-index: -100;
-        object-fit: cover;
+    /* 2. Header/Footer aur White Patti hatana */
+    #MainMenu, header, footer {visibility: hidden !important;}
+    .stApp { padding-top: 0px !important; margin-top: -60px !important; }
+     
+    /* 3. Audio aur Video Controls hide karna */
+    audio { display: none !important; }
+    video::-webkit-media-controls { display: none !important; }
+    
+    /* 4. Name input aur Button ko White background aur Black font dena */
+    .stTextInput > div > div > input {
+        background-color: white !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+    .stButton > button {
+        background-color: white !important;
+        color: black !important;
+        border: 2px solid black !important;
+        font-weight: bold !important;
     }
     </style>
+    <div class="portrait-warning">📱 Please rotate your device to LANDSCAPE mode!</div>
 """, unsafe_allow_html=True)
+
+# Audio Controller Function
+if 'audio_file' not in st.session_state:
+    st.session_state.audio_file = "intro_audio.mp3"
+  
+def play_audio():
+    st.markdown(f'''
+        <audio autoplay loop>
+            <source src="{st.session_state.audio_file}" type="audio/mpeg">
+        </audio>
+    ''', unsafe_allow_html=True)
 # --- Background Image Function ---
 def add_bg(image_file):
     if os.path.exists(image_file):
@@ -71,27 +87,27 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # Video ko load aur encode karein
-    video_file = open("intro.mp4", "rb")
-    video_bytes = video_file.read()
-    video_base64 = base64.b64encode(video_bytes).decode('utf-8')
+    # 1. Audio set karein
+    st.session_state.audio_file = "intro_audio.mp3"
+    play_audio()
     
-    # CSS aur Video tag ek saath
-    st.markdown(f"""
+    # 2. Video display (Seedha path use karein, base64 ki zaroorat nahi)
+    st.markdown('''
         <style>
-        .video-container {{
+        .video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            object-fit: cover; z-index: 9999;
-        }}
+            object-fit: cover; z-index: -1;
+        }
         </style>
-        <video class="video-container" autoplay playsinline muted>
-            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
+        <video class="video-container" autoplay playsinline muted loop>
+            <source src="intro.mp4" type="video/mp4">
         </video>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
     
-    # Video chalne ka wait (10.4 seconds)
+    # 3. Time wait aur transition
     time.sleep(10.4)
     st.session_state.step = 'register'
+    st.session_state.audio_file = "background_music.mp3" # Agle step ke liye music
     st.rerun()
 
 elif st.session_state.step == 'register':
