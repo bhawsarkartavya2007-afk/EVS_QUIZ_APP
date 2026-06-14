@@ -115,7 +115,7 @@ elif st.session_state.step == 'intro':
     st.audio("bg_music.mp3", autoplay=True, loop=True)
     
     # 4. Wait karo aur agle step par jao
-    time.sleep(10.4) 
+    time.sleep(10.9) 
     st.session_state.step = 'register'
     st.rerun()
 elif st.session_state.step == 'register':
