@@ -205,6 +205,8 @@ elif st.session_state.step == 'end':
         df_scores = pd.concat([pd.read_csv('leaderboard.csv'), score_data], ignore_index=True)
     else:
         df_scores = score_data
+        df_scores = df_scores.drop_duplicates(subset=['Name', 'Score'], keep='last')
+    df_scores = df_scores.sort_values(by='Score', ascending=False).head(10)
     df_scores.to_csv('leaderboard.csv', index=False)
     
     st.write("### 🏆 Leaderboard")
