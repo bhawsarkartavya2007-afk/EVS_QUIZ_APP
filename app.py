@@ -6,20 +6,33 @@ import base64
 import os
 st.markdown("""
     <style>
-        /* Landscape mode ke liye force karna */
-        @media screen and (orientation: portrait) {
-            body {
-                transform: rotate(90deg);
-                transform-origin: left top;
-                width: 100vh;
-                height: 100vw;
-                overflow-x: hidden;
-                position: absolute;
-                top: 0;
-                left: 0;
-            }
+    /* 1. Header, menu, footer hide karo */
+    #MainMenu, header, footer {
+        visibility: hidden !important;
+    }
+
+    /* 2. Mobile ki top white strip ko hata kar app ko full screen karne ke liye */
+    .stApp {
+        padding-top: 0px !important;
+        margin-top: 0px !important;
+    }
+
+    /* 3. Landscape mode force karne ka logic */
+    @media screen and (orientation: portrait) {
+        body {
+            transform: rotate(90deg);
+            transform-origin: left top;
+            width: 100vh;
+            height: 100vw;
+            overflow-x: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
-        div[data-baseweb="input"] {
+    }
+
+    /* 4. Input field styling (jo file 2735b2f9-aed5-4ed8-8c2c-f198a0b5344f mein hai) */
+    div[data-baseweb="input"] {
         background-color: white !important;
     }
     div[data-baseweb="input"] input {
