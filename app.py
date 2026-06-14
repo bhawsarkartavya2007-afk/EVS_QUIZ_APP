@@ -11,35 +11,30 @@ st.set_page_config(page_title="EVS Quiz App", layout="wide")
 # --- CSS Styling ---
 st.markdown("""
     <style>
-    /* Full screen aur white strip hatane ke liye */
+    /* Status bar aur extra white space hatane ke liye */
+    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
     .stApp {
         padding: 0 !important;
         margin: 0 !important;
-        overflow: hidden !important;
+        overflow-x: hidden !important;
     }
-    header, footer {visibility: hidden !important;}
-
-    /* LANDSCAPE WARNING (Portrait mode mein dikhega) */
-    @media only screen and (orientation: portrait) {
-        .portrait-warning {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: white; z-index: 9999; display: flex;
-            justify-content: center; align-items: center;
-            font-size: 24px; font-weight: bold; color: black;
-            text-align: center; padding: 20px;
-        }
-    }
-    /* Landscape mode mein ye warning hide ho jayegi */
-    @media only screen and (orientation: landscape) {
-        .portrait-warning { display: none; }
+    header {visibility: hidden !important;}
+    footer {visibility: hidden !important;}
+    
+    /* Intro video full screen ke liye */
+    .video-full {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: -100;
+        object-fit: cover;
     }
     </style>
-
-    <div class="portrait-warning">
-        📱 Please rotate your device to LANDSCAPE mode for the best experience!
-    </div>
 """, unsafe_allow_html=True)
-
 # --- Background Image Function ---
 def add_bg(image_file):
     if os.path.exists(image_file):
