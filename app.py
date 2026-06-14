@@ -1,34 +1,37 @@
 import streamlit as st
 import pandas as pd
 import random
-import os
+import time
 import base64
+import os
 
-# --- Page Setup ---
-st.set_page_config(page_title="EVS Quiz App", layout="wide")
-
-# --- UI Styling (CSS) ---
+# --- CSS Styling (Original Maintain Rakha Hai) ---
 st.markdown("""
     <style>
-    .stApp { background-color: #f0f2f6; }
-    .stButton > button { width: 100%; border-radius: 10px; font-weight: bold; }
+    #MainMenu, header, footer {visibility: hidden !important;}
+    .stApp { padding-top: 0px !important; margin-top: 0px !important; }
+    div[data-baseweb="input"] { background-color: white !important; }
+    div[data-baseweb="input"] input { color: black !important; }
+    .stButton > button {
+        padding: 15px 30px; font-size: 18px; background-color: white !important; 
+        color: black !important; border: 2px solid black !important;
+        border-radius: 10px; font-weight: bold !important;
+    }
+    .block-container { padding: 2rem !important; background: rgba(255, 255, 255, 0.2); border-radius: 20px; border: 2px solid rgba(0,0,0,0.9) }
+    audio { display: none !important; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- Initialize State ---
-if 'step' not in st.session_state:
-    st.session_state.update(
-        step='home', 
-        current_q_index=0, 
-        score=0, 
-        name="", 
-        selected_qs=[]
-    )
+# --- Background Image Function ---
+def add_bg(image_file):
+    if os.path.exists(image_file):
+        with open(image_file, "rb") as f:
+            encoded = base64.b64encode(f.read()).decode()
+        st.markdown(f"""<style>.stApp {{ background: url(data:image/jpeg;base64,{encoded}); background-size: cover; background-position: center; background-attachment: fixed; filter: saturate(1.5) brightness(0.9) }} p, div, label, h1, h2, h3 {{ color: black !important; font-weight: bold !important; }}</style>""", unsafe_allow_html=True)
 
 # --- Helper Functions ---
 @st.cache_data
 def load_data():
-    # Aapki excel file ka path
     df = pd.read_excel("quiz_data.xlsx")
     df.columns = df.columns.str.strip()
     return df.to_dict('records')
@@ -44,12 +47,27 @@ def save_score(name, score):
         df_final = df_new
     df_final.to_csv(file, index=False)
 
-# --- App Pages ---
+# --- Session Initialization ---
+if 'step' not in st.session_state:
+    st.session_state.update(step='start_screen', current_q_index=0, score=0, name="", selected_qs=[])
 
-# 1. Home Page
-if st.session_state.step == 'home':
-    st.title("EVS Quiz App")
-    name = st.text_input("Apna Naam Likhein:")
+# --- App Flow ---
+if st.session_state.step == 'start_screen':
+    if st.button("Click to Start Experience"):
+        st.session_state.step = 'intro'
+        st.rerun()
+
+elif st.session_state.step == 'intro':
+    with st.expander("Watch Intro Video", expanded=True):
+        st.video("intro.mp4", autoplay=True)
+    time.sleep(10.4) 
+    st.session_state.step = 'register'
+    st.rerun()
+
+elif st.session_state.step == 'register':
+    add_bg("wallpaper.jpg")
+    st.title("Registration")
+    name = st.text_input("Enter your name:")
     if st.button("Start Quiz"):
         if name:
             st.session_state.name = name
@@ -58,43 +76,46 @@ if st.session_state.step == 'home':
             st.session_state.step = 'quiz'
             st.rerun()
         else:
-            st.warning("Please apna naam enter karein!")
+            st.warning("Please enter your name!")
 
-# 2. Quiz Page
 elif st.session_state.step == 'quiz':
+    add_bg("wallpaper.jpg")
+    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
+    
     idx = st.session_state.current_q_index
     item = st.session_state.selected_qs[idx]
     
+    if f"options_{idx}" not in st.session_state:
+        opts = [item['optionA'], item['optionB'], item['optionC'], item['optionD']]
+        random.shuffle(opts)
+        st.session_state[f"options_{idx}"] = opts
+        
     st.subheader(f"Q{idx+1}: {item['question']}")
-    
-    # Radio buttons for options
-    options = [item['optionA'], item['optionB'], item['optionC'], item['optionD']]
-    ans = st.radio("Choose the correct answer:", options, key=f"q_{idx}")
+    ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
     
     if st.button("Next"):
         if ans == item['correct answer']:
             st.session_state.score += 1
-            
+        
         if idx < len(st.session_state.selected_qs) - 1:
             st.session_state.current_q_index += 1
             st.rerun()
         else:
             save_score(st.session_state.name, st.session_state.score)
-            st.session_state.step = 'result'
+            st.session_state.step = 'end'
             st.rerun()
 
-# 3. Result Page
-elif st.session_state.step == 'result':
-    st.title("Quiz Complete! 🎉")
-    st.write(f"Hello {st.session_state.name}, Your Score is: {st.session_state.score} / 20")
+elif st.session_state.step == 'end':
+    add_bg("wallpaper.jpg")
+    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
+    st.success(f"Well done {st.session_state.name}!")
+    st.subheader(f"Your Final Score: {st.session_state.score}/20")
     
-    st.subheader("Leaderboard")
+    st.subheader("🏆 Leaderboard")
     if os.path.exists('leaderboard.csv'):
         df = pd.read_csv('leaderboard.csv')
-        # Sabse zyada score wale upar dikhenge
-        df = df.sort_values(by='Score', ascending=False)
-        st.table(df.head(10)) # Top 10 dikhayega
-    
-    if st.button("Play Again"):
+        st.table(df.sort_values(by='Score', ascending=False).head(10))
+        
+    if st.button("Restart"):
         st.session_state.clear()
         st.rerun()
