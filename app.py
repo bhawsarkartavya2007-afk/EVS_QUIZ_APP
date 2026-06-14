@@ -133,7 +133,7 @@ if st.session_state.step == 'start_screen':
 
 elif st.session_state.step == 'intro':
     st.video("intro.mp4", autoplay=True)
-    time.sleep(10.3) 
+    time.sleep(10.4) 
     st.session_state.step = 'register'
     st.rerun()
 
@@ -172,7 +172,7 @@ elif st.session_state.step == 'quiz':
         st.session_state.user_responses.append({
             "question": item['question'],
             "user_choice": ans,
-            "correct_answer": item['answer']  # Ye tumhari Excel/Data mein jo column sahi answer ka hai, wahi likhna
+            "correct_answer": item['correct']  # Ye tumhari Excel/Data mein jo column sahi answer ka hai, wahi likhna
         })
         if idx < len(st.session_state.selected_qs) - 1:
             st.session_state.current_q_index += 1
