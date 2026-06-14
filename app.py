@@ -189,8 +189,8 @@ elif st.session_state.step == 'end':
     st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     st.success(f"Well done {st.session_state.name}!")
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
-       if st.button("View Detailed Results"):
-           for i, item in enumerate(st.session_state.user_responses):
+    if st.button("View Detailed Results"):
+        for i, item in enumerate(st.session_state.user_responses):
             st.write(f"**Question {i+1}:** {item['question']}")
             st.write(f"Your choice: {item['user_choice']}")
             
