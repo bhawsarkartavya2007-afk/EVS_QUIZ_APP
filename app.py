@@ -8,14 +8,16 @@ import os
 # Page Config
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
-# --- Pura CSS Block (Landscape, White Box, Audio/Video Control) ---
+# --- Pura CSS Block <link rel="manifest" href="manifest.json">
 st.markdown("""
     <style>
     /* 1. Landscape Warning */
     @media only screen and (orientation: portrait) {
         .portrait-warning { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: white; z-index: 99999; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: black; text-align: center; padding: 20px; }
     }
-    @media only screen and (orientation: landscape) { .portrait-warning { display: none; } }
+    @media only screen and (orientation: landscape) { 
+        .portrait-warning { display: none; }
+    }
     
     /* 2. Header/Footer aur White Patti hatana */
     #MainMenu, header, footer {visibility: hidden !important;}
