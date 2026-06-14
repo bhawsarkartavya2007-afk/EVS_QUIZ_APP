@@ -87,11 +87,11 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # 1. Audio set karein
+    # Audio setup
     st.session_state.audio_file = "intro_audio.mp3"
     play_audio()
     
-    # 2. Video display (Seedha path use karein, base64 ki zaroorat nahi)
+    # Video setup (Ab static folder ke andar hai)
     st.markdown('''
         <style>
         .video-container {
@@ -100,14 +100,13 @@ elif st.session_state.step == 'intro':
         }
         </style>
         <video class="video-container" autoplay playsinline muted loop>
-            <source src="intro.mp4" type="video/mp4">
+            <source src="static/intro.mp4" type="video/mp4">
         </video>
     ''', unsafe_allow_html=True)
     
-    # 3. Time wait aur transition
     time.sleep(10.4)
     st.session_state.step = 'register'
-    st.session_state.audio_file = "background_music.mp3" # Agle step ke liye music
+    st.session_state.audio_file = "background_music.mp3"
     st.rerun()
 
 elif st.session_state.step == 'register':
