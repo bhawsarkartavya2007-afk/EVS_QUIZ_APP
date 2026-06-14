@@ -16,8 +16,8 @@ if 'data' not in st.session_state:
 if st.session_state.idx < len(st.session_state.data):
     q = st.session_state.data[st.session_state.idx]
     
-    st.write(f"### Q{st.session_state.idx + 1}: {q['Question']}")
-    ans = st.radio("Options:", [q['Opt1'], q['Opt2'], q['Opt3'], q['Opt4']], key="r")
+    st.write(f"### Q{st.session_state.idx + 1}: {q['question']}")
+    ans = st.radio("Options:", [q['optionA'], q['optionB'], q['optionC'], q['optionD']], key="r")
     
     if st.button("Submit"):
         st.session_state.submitted = True
