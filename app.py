@@ -87,30 +87,12 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # Audio setup
-    st.session_state.audio_file = "intro_audio.mp3"
-    play_audio()
+    # Video play karne ka sabse simple aur best tareeka
+    st.video("intro.mp4") 
     
-    # Video setup - yahan loop aur autoplay force kiya hai
-    st.markdown('''
-        <style>
-        .video-container {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            object-fit: cover; z-index: -1;
-        }
-        </style>
-        <video class="video-container" autoplay playsinline muted loop>
-            <source src="static/intro.mp4" type="video/mp4">
-        </video>
-        <script>
-            var vid = document.querySelector(".video-container");
-            vid.play();
-        </script>
-    ''', unsafe_allow_html=True)
-    
-    time.sleep(10.4)
+    # Time ka wait
+    time.sleep(10.4) 
     st.session_state.step = 'register'
-    st.session_state.audio_file = "background_music.mp3"
     st.rerun()
 elif st.session_state.step == 'register':
     add_bg("wallpaper.jpg")
