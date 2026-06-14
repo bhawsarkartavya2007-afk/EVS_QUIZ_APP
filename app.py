@@ -255,37 +255,47 @@ elif st.session_state.step == 'end':
                     st.divider()
 
         # 3. Leaderboard Logic (Saaf aur Duplicate-free)
-      if st.session_state.get("show_page") == "results":
-    st.subheader("📝 Detailed Results")
-    # 'st.container' ki jagah 'st.expander' use karo kyunki usme 'expanded=True' kaam karta hai
-    with st.expander("Click to see your detailed results", expanded=True):
-        for i, item in enumerate(st.session_state.user_responses):
-            st.write(f"**Question {i+1}:** {item['question']}")
-            st.write(f"Your choice: {item['user_choice']}")
-            
-            # Yahan correction logic daal do
-            correct = item.get('correct_answer')
-            if item['user_choice'] == correct:
-                st.success("Correct!")
-            else:
-                st.error(f"Incorrect. The correct answer was: {correct}")
-            st.divider()
+    if st.session_state.get("quiz_finished", False):
+    st.subheader("Quiz Completed! 🎉")
     
-    if st.button("⬅️ Back to Main"):
-        st.session_state.show_page = "main"
-        st.rerun()
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("📝 Details"):
+            st.session_state.show_page = "results"
+            st.rerun()
+    with col2:
+        if st.button("🔄 Restart"):
+            st.session_state.clear()
+            st.rerun()
+    with col3:
+        if st.button("🏆 Leaderboard"):
+            st.session_state.show_page = "leaderboard"
+            st.rerun()
 
-# 2. Leaderboard Page
-elif st.session_state.get("show_page") == "leaderboard":
-    st.subheader("🏆 Leaderboard")
-    
-    # Leaderboard logic jo tumne photo mein dikhaya tha
-    if os.path.exists('leaderboard.csv'):
-        df = pd.read_csv('leaderboard.csv')
-        # Sort aur display logic
-        df = df.sort_values(by='Score', ascending=False).head(100)
-        st.table(df.reset_index(drop=True))
-        
-    if st.button("⬅️ Back to Main"):
-        st.session_state.show_page = "main"
-        st.rerun()
+    # --- Yahan Navigation Handle Karo ---
+    if st.session_state.get("show_page") == "results":
+        st.subheader("📝 Detailed Results")
+        with st.expander("Click to see your detailed results", expanded=True):
+            for i, item in enumerate(st.session_state.user_responses):
+                st.write(f"**Question {i+1}:** {item['question']}")
+                st.write(f"Your choice: {item['user_choice']}")
+                correct = item.get('correct_answer')
+                if item['user_choice'] == correct:
+                    st.success("Correct!")
+                else:
+                    st.error(f"Incorrect. The correct answer was: {correct}")
+                st.divider()
+        if st.button("⬅️ Back to Main"):
+            st.session_state.show_page = "main"
+            st.rerun()
+
+    elif st.session_state.get("show_page") == "leaderboard":
+        st.subheader("🏆 Leaderboard")
+        if os.path.exists('leaderboard.csv'):
+            df = pd.read_csv('leaderboard.csv')
+            df = df.sort_values(by='Score', ascending=False).head(100)
+            st.table(df.reset_index(drop=True))
+        if st.button("⬅️ Back to Main"):
+            st.session_state.show_page = "main"
+            st.rerun()
