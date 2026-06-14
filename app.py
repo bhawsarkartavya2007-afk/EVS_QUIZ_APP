@@ -205,7 +205,7 @@ elif st.session_state.step == 'end':
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
         
         # 1. Buttons
-        col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
         with col1:
             if st.button("View Detailed Results"):
                 st.session_state.show_page = "results"
