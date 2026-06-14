@@ -3,11 +3,7 @@ import pandas as pd
 import random
 import os
 import base64
-
-# --- PAGE CONFIG ---
-st.set_page_config(page_title="EVS Quiz App", layout="wide")
-
-# --- CSS ---
+st.set_page_config(page_title="EVS Quiz App", layout="wide"
 st.markdown("""
     <style>
     #MainMenu, header, footer {visibility: hidden !important;}
@@ -17,8 +13,7 @@ st.markdown("""
     .stButton > button { padding: 15px 30px; background-color: white !important; color: black !important; border: 2px solid black !important; border-radius: 10px; font-weight: bold !important;}
     </style>
 """, unsafe_html=True)
-
-# --- HELPER ---
+                   
 def add_bg(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
