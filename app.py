@@ -254,10 +254,10 @@ elif st.session_state.step == 'end':
                         st.error(f"Incorrect. The correct answer was: {correct}")
                     st.divider()
 
-      # Quiz khatam hone ke baad wala logic
+   # --- 1. Quiz Khatam Hone Ka Logic ---
 if st.session_state.get("quiz_finished", False):
-    st.subheader("Quiz Completed! 🎉")
     
+    # Buttons ka menu
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("📝 Details"):
@@ -265,6 +265,7 @@ if st.session_state.get("quiz_finished", False):
             st.rerun()
     with col2:
         if st.button("🔄 Restart"):
+            # Sab kuch reset karo
             st.session_state.clear()
             st.rerun()
     with col3:
@@ -272,30 +273,36 @@ if st.session_state.get("quiz_finished", False):
             st.session_state.show_page = "leaderboard"
             st.rerun()
 
-    # Page navigation handle karo
+    # --- 2. Pages Ka Logic ---
+    
+    # Details Page
     if st.session_state.get("show_page") == "results":
-        st.subheader("📝 Detailed Results")
-        with st.expander("Click to see your detailed results", expanded=True):
+        st.subheader("📝 Detailed Results (Q1-Q20)")
+        with st.expander("Click to view corrections", expanded=True):
             for i, item in enumerate(st.session_state.user_responses):
-                st.write(f"**Question {i+1}:** {item['question']}")
+                st.write(f"**Q{i+1}:** {item['question']}")
                 st.write(f"Your choice: {item['user_choice']}")
-                # Correction logic
-                correct = item.get('correct_answer')
-                if item['user_choice'] == correct:
-                    st.success("Correct!")
+                if item['user_choice'] == item.get('correct_answer'):
+                    st.success("✅ Correct!")
                 else:
-                    st.error(f"Incorrect. The correct answer was: {correct}")
+                    st.error(f"❌ Wrong! Correct was: {item.get('correct_answer')}")
                 st.divider()
-        if st.button("⬅️ Back"):
+        if st.button("⬅️ Back to Main Menu"):
             st.session_state.show_page = "main"
             st.rerun()
 
+    # Leaderboard Page
     elif st.session_state.get("show_page") == "leaderboard":
-        st.subheader("🏆 Leaderboard")
+        st.subheader("🏆 Top 100 Players")
+        import pandas as pd
+        import os
         if os.path.exists('leaderboard.csv'):
             df = pd.read_csv('leaderboard.csv')
+            # Sort by Score and show top 100
             df = df.sort_values(by='Score', ascending=False).head(100)
-            st.table(df.reset_index(drop=True))
-        if st.button("⬅️ Back"):
+            st.table(df)
+        else:
+            st.write("No leaderboard data yet!")
+        if st.button("⬅️ Back to Main Menu"):
             st.session_state.show_page = "main"
             st.rerun()
