@@ -71,24 +71,25 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # Video container
-    st.markdown("""
+    # Video ko load aur encode karein
+    video_file = open("intro.mp4", "rb")
+    video_bytes = video_file.read()
+    video_base64 = base64.b64encode(video_bytes).decode('utf-8')
+    
+    # CSS aur Video tag ek saath
+    st.markdown(f"""
         <style>
-        .video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; /* Yeh video ko zoom aur stretch karega poori screen ke liye */
-            z-index: -1;
-        }
+        .video-container {{
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: 9999;
+        }}
         </style>
+        <video class="video-container" autoplay playsinline muted>
+            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
+        </video>
     """, unsafe_allow_html=True)
     
-    # Video display (HTML5 video tag)
-    st.markdown('<video class="video-container" autoplay playsinline muted src="intro.mp4"></video>', unsafe_allow_html=True)
-    
+    # Video chalne ka wait (10.4 seconds)
     time.sleep(10.4)
     st.session_state.step = 'register'
     st.rerun()
