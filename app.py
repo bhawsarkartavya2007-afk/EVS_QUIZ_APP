@@ -87,14 +87,27 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    video_file = open("intro.mp4", "rb")
-    video_bytes = video_file.read()
-    video_base64 = base64.b64encode(video_bytes).decode('utf-8')
-    st.markdown(f"""
-        <video class="video-container" autoplay playsinline muted>
-            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
-        </video>
-    """, unsafe_allow_html=True)
+    with st.expander("Watch Intro Video", expanded=True):
+        st.video("intro.mp4", autoplay=True)
+    time.sleep(10.4) 
+    st.session_state.step = 'register'
+    st.rerun()
+
+elif st.session_state.step == 'register':
+    add_bg("wallpaper.jpg")
+    st.title("Registration")
+    name = st.text_input("Enter your name:")
+    if st.button("Start Quiz"):
+        if name:
+            st.session_state.name = name
+            quiz_data = load_data()
+            st.session_state.selected_qs = random.sample(quiz_data, min(20, len(quiz_data)))
+            st.session_state.step = 'quiz'
+            st.rerun()
+        else:
+            st.warning("Please enter your name!")
+
+
     st.audio("bg_music.mp3", autoplay=True, loop=True)
     time.sleep(11)
     st.session_state.step = 'register'
