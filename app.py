@@ -4,39 +4,6 @@ import random
 import time
 import base64
 import os
-# 1. Excel Load aur Shuffle (Sirf ek baar)
-if 'data' not in st.session_state:
-    df = pd.read_excel('quiz_data.xlsx') 
-    st.session_state.data = df.sample(frac=1).reset_index(drop=True).to_dict('records')
-    st.session_state.idx = 0
-    st.session_state.score = 0
-    st.session_state.submitted = False
-
-# 2. Quiz ka Logic
-if st.session_state.idx < len(st.session_state.data):
-    q = st.session_state.data[st.session_state.idx]
-    
-    st.write(f"### Q{st.session_state.idx + 1}: {q['question']}")
-    ans = st.radio("Options:", [q['optionA'], q['optionB'], q['optionC'], q['optionD']], key="r")
-    
-    if st.button("Submit"):
-        st.session_state.submitted = True
-        if ans == q['Correct']:
-            st.success("✅ correct answer!")
-            st.session_state.score += 1
-        else:
-            st.error(f"❌ wrong answer Sahi: {q['Correct']}")
-            
-    if st.session_state.submitted:
-        if st.button("Next"):
-            st.session_state.idx += 1
-            st.session_state.submitted = False
-            st.rerun()
-else:
-    # 3. Final Leaderboard Screen
-    st.write(f"## Quiz Khatam! Score: {st.session_state.score}/20")
-    if st.button("Final Submit & Leaderboard"):
-        st.write("Leaderboard Loading...")
 st.markdown("""
     <style>
     /* 1. Header, menu, footer hide karo */
