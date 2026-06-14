@@ -107,7 +107,7 @@ elif st.session_state.step == 'intro':
     """, unsafe_allow_html=True)
 
     # Video chalne ka wait (10.4 seconds)
-    time.sleep(10.4) 
+    time.sleep(10.7) 
     st.session_state.step = 'register'
     st.rerun()
 elif st.session_state.step == 'register':
