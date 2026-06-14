@@ -4,55 +4,39 @@ import random
 import time
 import base64
 import os
-# 1. CSS (Ise top par rehne do)
-st.markdown("""
-    <style>
-    #MainMenu, header, footer { visibility: hidden !important; }
-    .stApp { padding-top: 0px !important; margin-top: 0px !important; }
-    </style>
-""", unsafe_allow_html=True)
-
-# 2. Session state setup
-if 'question_index' not in st.session_state:
-    st.session_state.question_index = 0
+# 1. Excel Load aur Shuffle (Sirf ek baar)
+if 'data' not in st.session_state:
+    df = pd.read_excel('quiz_data.xlsx') 
+    st.session_state.data = df.sample(frac=1).reset_index(drop=True).to_dict('records')
+    st.session_state.idx = 0
     st.session_state.score = 0
-    st.session_state.quiz_finished = False
+    st.session_state.submitted = False
 
-# 3. Quiz ka Logic
-if not st.session_state.quiz_finished:
-    # Yahan apne questions ki list banao
-    questions = [
-        {"q": "Q1: Swachh Bharat Abhiyan kab shuru hua?", "options": ["2014", "2015", "2016"], "ans": "2014"},
-        # ... apne baaki questions yahan add karo ...
-    ]
+# 2. Quiz ka Logic
+if st.session_state.idx < len(st.session_state.data):
+    q = st.session_state.data[st.session_state.idx]
     
-    if st.session_state.question_index < len(questions):
-        q_data = questions[st.session_state.question_index]
-        st.write(q_data["q"])
-        user_choice = st.radio("Options:", q_data["options"], key="radio")
-        
-        if st.button("Submit"):
-            if user_choice == q_data["ans"]:
-                st.success("✅ Sahi Jawab!")
-                st.session_state.score += 1
-            else:
-                st.error(f"❌ Galat! Sahi jawab: {q_data['ans']}")
+    st.write(f"### Q{st.session_state.idx + 1}: {q['Question']}")
+    ans = st.radio("Options:", [q['Opt1'], q['Opt2'], q['Opt3'], q['Opt4']], key="r")
+    
+    if st.button("Submit"):
+        st.session_state.submitted = True
+        if ans == q['Correct']:
+            st.success("✅ correct answer!")
+            st.session_state.score += 1
+        else:
+            st.error(f"❌ wrong answer Sahi: {q['Correct']}")
             
-            time.sleep(2) # 2 sec ruk kar next question
-            st.session_state.question_index += 1
+    if st.session_state.submitted:
+        if st.button("Next"):
+            st.session_state.idx += 1
+            st.session_state.submitted = False
             st.rerun()
-    else:
-        st.session_state.quiz_finished = True
-        st.rerun()
-
-# 4. Quiz Khatam hone par
 else:
-    st.write(f"Quiz khatam! Tumhare points: {st.session_state.score}")
-    if st.button("🏆 Leaderboard"):
-        st.write("Leaderboard dikha raha hoon...")
-    if st.button("🔄 Restart"):
-        st.session_state.clear()
-        st.rerun()
+    # 3. Final Leaderboard Screen
+    st.write(f"## Quiz Khatam! Score: {st.session_state.score}/20")
+    if st.button("Final Submit & Leaderboard"):
+        st.write("Leaderboard Loading...")
 st.markdown("""
     <style>
     /* 1. Header, menu, footer hide karo */
