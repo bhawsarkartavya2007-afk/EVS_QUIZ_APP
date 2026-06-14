@@ -90,25 +90,46 @@ elif st.session_state.step == 'quiz':
     idx = st.session_state.current_q_index
     item = st.session_state.selected_qs[idx]
     
+    # State check: kya is question ka jawab diya ja chuka hai?
+    if f"answered_{idx}" not in st.session_state:
+        st.session_state[f"answered_{idx}"] = False
+        
     if f"options_{idx}" not in st.session_state:
         opts = [item['optionA'], item['optionB'], item['optionC'], item['optionD']]
         random.shuffle(opts)
         st.session_state[f"options_{idx}"] = opts
         
     st.subheader(f"Q{idx+1}: {item['question']}")
-    ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
     
-    if st.button("Next"):
-        if ans == item['correct answer']:
-            st.session_state.score += 1
+    # Agar answer nahi diya, toh radio button dikhayein
+    if not st.session_state[f"answered_{idx}"]:
+        ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
         
-        if idx < len(st.session_state.selected_qs) - 1:
-            st.session_state.current_q_index += 1
+        if st.button("Submit Answer"):
+            st.session_state[f"answered_{idx}"] = True # Lock lag gaya
+            if ans == item['correct answer']:
+                st.success("✅ Sahi Jawab!")
+                st.session_state.score += 1
+            else:
+                st.error(f"❌ Galat Jawab! Sahi tha: {item['correct answer']}")
             st.rerun()
+            
+    # Agar answer diya ja chuka hai, toh feedback dikhayein aur "Next Question"
+    else:
+        # Feedback phir se dikhayein agar user refresh kare
+        if st.session_state.get(f"last_ans_{idx}") == item['correct answer']:
+            st.success("✅ Sahi Jawab!")
         else:
-            save_score(st.session_state.name, st.session_state.score)
-            st.session_state.step = 'end'
-            st.rerun()
+            st.error(f"❌ Galat Jawab! Sahi tha: {item['correct answer']}")
+            
+        if st.button("Next Question"):
+            if idx < len(st.session_state.selected_qs) - 1:
+                st.session_state.current_q_index += 1
+                st.rerun()
+            else:
+                save_score(st.session_state.name, st.session_state.score)
+                st.session_state.step = 'end'
+                st.rerun()
 
 elif st.session_state.step == 'end':
     add_bg("wallpaper.jpg")
