@@ -9,6 +9,11 @@ import os
 st.markdown("""
     <style>
     #MainMenu, header, footer {visibility: hidden !important;}
+    /* Yeh naya code yahan add karein */
+    video {
+        width: 100% !important;
+        height: auto !important;
+    }
     .stApp { padding-top: 0px !important; margin-top: 0px !important; }
     div[data-baseweb="input"] { background-color: white !important; }
     div[data-baseweb="input"] input { color: black !important; }
@@ -58,8 +63,7 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    with st.expander("Watch Intro Video", expanded=True):
-        st.video("intro.mp4", autoplay=True)
+        st.video("intro.mp4", autoplay=True, loop=False)
     time.sleep(10.4) 
     st.session_state.step = 'register'
     st.rerun()
@@ -87,8 +91,8 @@ elif st.session_state.step == 'quiz':
     
     if f"options_{idx}" not in st.session_state:
         opts = [item['optionA'], item['optionB'], item['optionC'], item['optionD']]
-        random.shuffle(opts)
-        st.session_state[f"options_{idx}"] = opts
+        random.shuffle(option)
+        st.session_state[f"options_{idx}"] = option
         
     st.subheader(f"Q{idx+1}: {item['question']}")
     ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
