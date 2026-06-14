@@ -185,25 +185,24 @@ elif st.session_state.step == 'quiz':
             st.rerun()
 
 elif st.session_state.step == 'end':
-    st.markdown("""
+        st.markdown("""
             <style>
-            /* Expander (Results) aur Table (Leaderboard) ka background white */
-            div[data-testid="stExpander"], div[data-testid="stTable"], .stTable {
+            div[data-testid="stExpander"], .stTable {
                 background-color: #FFFFFF !important;
                 padding: 20px;
                 border-radius: 10px;
             }
-            /* Text ka color black kar rahe hain taaki white background par dikhe */
             div[data-testid="stExpander"], .stTable, .stTable td, .stTable th {
                 color: black !important;
             }
             </style>
         """, unsafe_allow_html=True)
-     add_bg("wallpaper.jpg")
-     st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
-     st.success(f"Well done {st.session_state.name}!")
-     st.subheader(f"Your Final Score: {st.session_state.score}/20")
         
+        add_bg("wallpaper.jpg")
+        st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
+        st.success(f"Well done {st.session_state.name}!")
+        st.subheader(f"Your Final Score: {st.session_state.score}/20")
+
         # 1. Buttons
         col1, col2 = st.columns(2)
         with col1:
