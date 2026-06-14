@@ -107,8 +107,7 @@ elif st.session_state.step == 'intro':
     """, unsafe_allow_html=True)
     # Audio ko alag se play karo
 st.audio("bg_music.mp3", autoplay=True, loop=True)
-
-    # Video chalne ka wait (11 seconds)
+ # Video chalne ka wait (11 seconds)
     time.sleep(11) 
     st.session_state.step = 'register'
     st.rerun()
