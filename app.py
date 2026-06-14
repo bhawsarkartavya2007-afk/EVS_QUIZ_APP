@@ -5,18 +5,19 @@ import time
 import base64
 import os
 
-# --- CSS Styling (Original Maintain Rakha Hai) ---
+# --- Page Setup ---
+st.set_page_config(page_title="EVS Quiz App", layout="wide")
+
+# --- CSS Styling ---
 st.markdown("""
     <style>
     #MainMenu, header, footer {visibility: hidden !important;}
-    /* Yeh naya code yahan add karein */
-    video {
-        width: 100% !important;
-        height: auto !important;
-    }
     .stApp { padding-top: 0px !important; margin-top: 0px !important; }
     div[data-baseweb="input"] { background-color: white !important; }
     div[data-baseweb="input"] input { color: black !important; }
+    
+    /* Video aur Button Styling */
+    video { width: 100% !important; height: auto !important; }
     .stButton > button {
         padding: 15px 30px; font-size: 18px; background-color: white !important; 
         color: black !important; border: 2px solid black !important;
@@ -52,18 +53,18 @@ def save_score(name, score):
         df_final = df_new
     df_final.to_csv(file, index=False)
 
-# --- Session Initialization ---
+# --- Initialize State ---
 if 'step' not in st.session_state:
     st.session_state.update(step='start_screen', current_q_index=0, score=0, name="", selected_qs=[])
 
-# --- App Flow ---
+# --- Main Flow ---
 if st.session_state.step == 'start_screen':
     if st.button("Click to Start Experience"):
         st.session_state.step = 'intro'
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    st.video("intro.mp4", autoplay=True, loop=False)
+    st.video("intro.mp4", autoplay=True)
     time.sleep(10.4) 
     st.session_state.step = 'register'
     st.rerun()
@@ -91,8 +92,8 @@ elif st.session_state.step == 'quiz':
     
     if f"options_{idx}" not in st.session_state:
         opts = [item['optionA'], item['optionB'], item['optionC'], item['optionD']]
-        random.shuffle(option)
-        st.session_state[f"opts_{idx}"] = opts
+        random.shuffle(opts)
+        st.session_state[f"options_{idx}"] = opts
         
     st.subheader(f"Q{idx+1}: {item['question']}")
     ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
