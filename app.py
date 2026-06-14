@@ -133,7 +133,7 @@ if st.session_state.step == 'start_screen':
 
 elif st.session_state.step == 'intro':
     with st.expander("Watch Intro Video", expanded=True):
-    st.video("intro.mp4", autoplay=True)
+        st.video("intro.mp4", autoplay=True)
     time.sleep(10.4) 
     st.session_state.step = 'register'
     st.rerun()
