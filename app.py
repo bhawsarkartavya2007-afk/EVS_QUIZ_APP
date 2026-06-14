@@ -91,7 +91,7 @@ elif st.session_state.step == 'intro':
     st.session_state.audio_file = "intro_audio.mp3"
     play_audio()
     
-    # Video setup (Ab static folder ke andar hai)
+    # Video setup - yahan loop aur autoplay force kiya hai
     st.markdown('''
         <style>
         .video-container {
@@ -102,13 +102,16 @@ elif st.session_state.step == 'intro':
         <video class="video-container" autoplay playsinline muted loop>
             <source src="static/intro.mp4" type="video/mp4">
         </video>
+        <script>
+            var vid = document.querySelector(".video-container");
+            vid.play();
+        </script>
     ''', unsafe_allow_html=True)
     
     time.sleep(10.4)
     st.session_state.step = 'register'
     st.session_state.audio_file = "background_music.mp3"
     st.rerun()
-
 elif st.session_state.step == 'register':
     add_bg("wallpaper.jpg")
     st.title("Registration")
