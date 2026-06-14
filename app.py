@@ -107,7 +107,7 @@ elif st.session_state.step == 'intro':
     
     # st.audio wala code yahan se hata do, kyuki audio video mein hai
     
-    time.sleep(12) # Video ki sahi lambai yahan likho
+    time.sleep(10) # Video ki sahi lambai yahan likho
     st.session_state.step = 'register'
     st.rerun()
 elif st.session_state.step == 'register':
