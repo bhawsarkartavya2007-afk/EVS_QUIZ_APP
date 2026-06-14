@@ -190,7 +190,7 @@ elif st.session_state.step == 'end':
     st.success(f"Well done {st.session_state.name}!")
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
     if st.button("View Detailed Results"):
-        with st.expander("Click to see your detailed results"):
+      with st.expander("Click to see your detailed results"):
         for i, item in enumerate(st.session_state.user_responses):
             st.write(f"**Question {i+1}:** {item['question']}")
             st.write(f"Your choice: {item['user_choice']}")
