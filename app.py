@@ -87,35 +87,27 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # 1. Video file ko read karo
+    # Audio-less video file ko load karo (jis mein music pehle se mix hai)
     with open("intro.mp4", "rb") as f:
         video_bytes = f.read()
     video_base64 = base64.b64encode(video_bytes).decode('utf-8')
 
-    # 2. CSS + HTML for Full Screen Video
+    # Full screen CSS + Video tag (Audio ab video ke andar hai)
     st.markdown(f"""
         <style>
-        /* Puri screen ko cover karne ke liye CSS */
         .full-screen-video {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: 9999;
         }}
         </style>
-        <video class="full-screen-video" autoplay playsinline muted>
+        <video class="full-screen-video" autoplay playsinline>
             <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
         </video>
     """, unsafe_allow_html=True)
     
-    # 3. Audio ko alag se play karo (full sound ke liye)
-    st.audio("bg_music.mp3", autoplay=True, loop=True)
+    # st.audio wala code yahan se hata do, kyuki audio video mein hai
     
-    # 4. Wait karo aur agle step par jao
-    time.sleep(10.9) 
+    time.sleep(12) # Video ki sahi lambai yahan likho
     st.session_state.step = 'register'
     st.rerun()
 elif st.session_state.step == 'register':
