@@ -199,7 +199,7 @@ elif st.session_state.step == 'end':
             }
             </style>
         """, unsafe_allow_html=True)
-   add_bg("wallpaper.jpg")
+        add_bg("wallpaper.jpg")
         st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
         st.success(f"Well done {st.session_state.name}!")
         st.subheader(f"Your Final Score: {st.session_state.score}/20")
