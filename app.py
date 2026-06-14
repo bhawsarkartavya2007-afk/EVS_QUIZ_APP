@@ -254,12 +254,11 @@ elif st.session_state.step == 'end':
                         st.error(f"Incorrect. The correct answer was: {correct}")
                     st.divider()
 
-        # 3. Leaderboard Logic (Saaf aur Duplicate-free)
-    if st.session_state.get("quiz_finished", False):
+      # Quiz khatam hone ke baad wala logic
+if st.session_state.get("quiz_finished", False):
     st.subheader("Quiz Completed! 🎉")
     
     col1, col2, col3 = st.columns(3)
-    
     with col1:
         if st.button("📝 Details"):
             st.session_state.show_page = "results"
@@ -273,20 +272,21 @@ elif st.session_state.step == 'end':
             st.session_state.show_page = "leaderboard"
             st.rerun()
 
-    # --- Yahan Navigation Handle Karo ---
+    # Page navigation handle karo
     if st.session_state.get("show_page") == "results":
         st.subheader("📝 Detailed Results")
         with st.expander("Click to see your detailed results", expanded=True):
             for i, item in enumerate(st.session_state.user_responses):
                 st.write(f"**Question {i+1}:** {item['question']}")
                 st.write(f"Your choice: {item['user_choice']}")
+                # Correction logic
                 correct = item.get('correct_answer')
                 if item['user_choice'] == correct:
                     st.success("Correct!")
                 else:
                     st.error(f"Incorrect. The correct answer was: {correct}")
                 st.divider()
-        if st.button("⬅️ Back to Main"):
+        if st.button("⬅️ Back"):
             st.session_state.show_page = "main"
             st.rerun()
 
@@ -296,6 +296,6 @@ elif st.session_state.step == 'end':
             df = pd.read_csv('leaderboard.csv')
             df = df.sort_values(by='Score', ascending=False).head(100)
             st.table(df.reset_index(drop=True))
-        if st.button("⬅️ Back to Main"):
+        if st.button("⬅️ Back"):
             st.session_state.show_page = "main"
             st.rerun()
