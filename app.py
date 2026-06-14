@@ -186,17 +186,31 @@ elif st.session_state.step == 'quiz':
 
 elif st.session_state.step == 'end':
         st.markdown("""
-            <style>
-            div[data-testid="stExpander"], .stTable {
-                background-color: #FFFFFF !important;
-                padding: 20px;
-                border-radius: 10px;
-            }
-            div[data-testid="stExpander"], .stTable, .stTable td, .stTable th {
-                color: black !important;
-            }
-            </style>
-        """, unsafe_allow_html=True)
+    <style>
+    /* Expander aur container ke background ko force karo */
+    [data-testid="stExpander"] {
+        background-color: #FFFFFF !important;
+        border: none !important;
+    }
+    
+    /* Expander ke andar ke element ka background */
+    [data-testid="stExpander"] div[role="button"] {
+        background-color: #FFFFFF !important;
+    }
+    
+    /* Agar tum st.container ya st.verticalBlock use kar rahe ho */
+    div[data-testid="stVerticalBlock"] {
+        background-color: #FFFFFF !important;
+        padding: 20px !important;
+        border-radius: 10px !important;
+    }
+    
+    /* Text color fix */
+    div, p, label, h1, h2, h3 {
+        color: #000000 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
         
         add_bg("wallpaper.jpg")
         st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
@@ -214,7 +228,7 @@ elif st.session_state.step == 'end':
 
         # 2. Results Logic
         if st.session_state.get("show_page") == "results":
-            with st.expander("Click to see your detailed results", expanded=True):
+            with st.container("Click to see your detailed results", expanded=True):
                 for i, item in enumerate(st.session_state.user_responses):
                     st.write(f"**Question {i+1}:** {item['question']}")
                     st.write(f"Your choice: {item['user_choice']}")
