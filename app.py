@@ -64,7 +64,7 @@ if st.session_state.step == 'start_screen':
 
 elif st.session_state.step == 'intro':
         st.video("intro.mp4", autoplay=True, loop=False)
-    time.sleep(10.4) 
+time.sleep(10.4) 
     st.session_state.step = 'register'
     st.rerun()
 
