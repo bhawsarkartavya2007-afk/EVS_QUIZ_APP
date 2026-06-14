@@ -87,10 +87,26 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # Video play karne ka sabse simple aur best tareeka
-    st.video("intro.mp4") 
-    
-    # Time ka wait
+    # Video file ko direct code mein load aur encode karo
+    # Iske liye 'intro.mp4' file ka tumhare local folder mein hona zaroori hai
+    video_file = open("intro.mp4", "rb")
+    video_bytes = video_file.read()
+    video_base64 = base64.b64encode(video_bytes).decode('utf-8')
+
+    # CSS aur Video tag ko ek saath lagao
+    st.markdown(f"""
+        <style>
+        .video-container {{
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: 9999;
+        }}
+        </style>
+        <video class="video-container" autoplay playsinline muted>
+            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
+        </video>
+    """, unsafe_allow_html=True)
+
+    # Video chalne ka wait (10.4 seconds)
     time.sleep(10.4) 
     st.session_state.step = 'register'
     st.rerun()
