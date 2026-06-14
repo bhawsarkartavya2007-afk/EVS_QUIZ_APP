@@ -6,29 +6,28 @@ import base64
 import os
 
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="EVS Quiz App", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="EVS Quiz App", layout="wide")
 
-# --- CSS & JAVASCRIPT ---
+# --- CSS & JS (Mobile UI, Video/Audio Controls, Colors) ---
 st.markdown("""
     <style>
-    /* Mobile/Desktop UI Clean Up */
+    /* 1. Mobile/Desktop Strip aur Header hatana */
     #MainMenu, header, footer {visibility: hidden !important;}
     .stApp {padding-top: 0px !important; margin-top: 0px !important;}
     
-    /* Hide Video/Audio Controls */
+    /* 2. Video/Audio controls hide karna */
     video::-webkit-media-controls {display: none !important;}
     audio {display: none !important;}
     
-    /* Text Styling */
+    /* 3. Text & Button Black Styling */
     p, div, label, h1, h2, h3 { color: black !important; font-weight: bold !important; }
-    .stButton > button { padding: 10px 20px; background-color: white !important; color: black !important; border: 2px solid black !important; border-radius: 10px; font-weight: bold !important;}
+    .stButton > button { padding: 15px 30px; background-color: white !important; color: black !important; border: 2px solid black !important; border-radius: 10px; font-size: 16px !important; }
     </style>
     
     <script>
     function triggerFullScreen() {
         var elem = document.documentElement;
         if (elem.requestFullscreen) { elem.requestFullscreen(); }
-        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
     }
     </script>
 """, unsafe_html=True)
@@ -37,7 +36,7 @@ st.markdown("""
 if 'step' not in st.session_state:
     st.session_state.update(step='start_screen', current_q_index=0, score=0, name="", selected_qs=[], show_page=None)
 
-# --- HELPER FUNCTIONS ---
+# --- HELPER ---
 def add_bg(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
@@ -46,14 +45,13 @@ def add_bg(image_file):
 
 # --- APP FLOW ---
 if st.session_state.step == 'start_screen':
-    # Button click par full screen trigger hoga
-    if st.button("Click to Experience", on_click=lambda: st.write('<script>triggerFullScreen();</script>', unsafe_allow_html=True)):
+    if st.button("Click to Experience", on_click=lambda: st.write('<script>triggerFullScreen();</script>', unsafe_html=True)):
         st.session_state.step = 'intro'
         st.rerun()
 
 elif st.session_state.step == 'intro':
     st.video("intro.mp4", autoplay=True)
-    time.sleep(10) # Intro duration
+    time.sleep(10)
     st.session_state.step = 'register'
     st.rerun()
 
@@ -70,7 +68,7 @@ elif st.session_state.step == 'register':
 
 elif st.session_state.step == 'quiz':
     add_bg("wallpaper.jpg")
-    st.audio('bg_music.mp3', autoplay=True, loop=True)
+    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     
     idx = st.session_state.current_q_index
     item = st.session_state.selected_qs[idx]
@@ -84,7 +82,8 @@ elif st.session_state.step == 'quiz':
         st.session_state[f"clicked_{idx}"] = False
 
     for opt in st.session_state[f"opts_{idx}"]:
-        btn_key = f"btn_{idx}_{opt}"
+        btn_key = f"btn_{idx}_{opt}" # Unique Key to fix DuplicateElementKey Error
+        
         if not st.session_state[f"clicked_{idx}"]:
             if st.button(opt, key=btn_key):
                 st.session_state[f"clicked_{idx}"] = True
@@ -94,7 +93,9 @@ elif st.session_state.step == 'quiz':
                 st.rerun()
         else:
             # Color Feedback Logic
-            btn_type = "primary" if opt == item.get('correct answer') else "secondary"
+            is_correct = (opt == item.get('correct answer'))
+            is_chosen = (opt == st.session_state.get(f"choice_{idx}"))
+            btn_type = "primary" if is_correct else ("secondary" if is_chosen else "secondary")
             st.button(opt, key=btn_key, type=btn_type, disabled=True)
 
     if st.session_state.get(f"clicked_{idx}"):
