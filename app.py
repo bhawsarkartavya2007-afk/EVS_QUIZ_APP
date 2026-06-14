@@ -105,13 +105,20 @@ elif st.session_state.step == 'quiz':
     if not st.session_state[f"answered_{idx}"]:
         ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
         
-        if st.button("Submit Answer"):
+       if st.button("Submit Answer"):
             st.session_state[f"answered_{idx}"] = True # Lock lag gaya
-            if ans == item['correct answer']:
+            
+            # Answer ko normalize karein
+            user_ans = str(ans).strip().lower()
+            correct_ans = str(item['correct answer']).strip().lower()
+            
+            if user_ans == correct_ans:
                 st.success("✅ Sahi Jawab!")
                 st.session_state.score += 1
+                st.session_state[f"last_ans_{idx}"] = ans
             else:
                 st.error(f"❌ Galat Jawab! Sahi tha: {item['correct answer']}")
+                st.session_state[f"last_ans_{idx}"] = ans
             st.rerun()
             
     # Agar answer diya ja chuka hai, toh feedback dikhayein aur "Next Question"
