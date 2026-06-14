@@ -6,25 +6,32 @@ import base64
 import os
 
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="EVS Quiz App", layout="wide")
+st.set_page_config(page_title="EVS Quiz App", layout="wide", initial_sidebar_state="collapsed")
 
-# --- CSS (WHITE STRIP & VIDEO CONTROLS REMOVAL) ---
+# --- CSS & JAVASCRIPT ---
 st.markdown("""
     <style>
-    /* 1. Mobile/Desktop top white strip aur header hatane ke liye */
+    /* Mobile/Desktop UI Clean Up */
     #MainMenu, header, footer {visibility: hidden !important;}
     .stApp {padding-top: 0px !important; margin-top: 0px !important;}
     
-    /* 2. Video ka control bar aur full-screen button hide karne ke liye */
-    video::-webkit-media-controls {
-        display: none !important;
-    }
+    /* Hide Video/Audio Controls */
+    video::-webkit-media-controls {display: none !important;}
+    audio {display: none !important;}
     
-    /* 3. Text Styling */
+    /* Text Styling */
     p, div, label, h1, h2, h3 { color: black !important; font-weight: bold !important; }
-    .stButton > button { padding: 10px 20px; background-color: white !important; color: black !important; border: 2px solid black !important; border-radius: 10px; }
+    .stButton > button { padding: 10px 20px; background-color: white !important; color: black !important; border: 2px solid black !important; border-radius: 10px; font-weight: bold !important;}
     </style>
-""", unsafe_allow_html=True)
+    
+    <script>
+    function triggerFullScreen() {
+        var elem = document.documentElement;
+        if (elem.requestFullscreen) { elem.requestFullscreen(); }
+        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+    }
+    </script>
+""", unsafe_html=True)
 
 # --- SESSION STATE ---
 if 'step' not in st.session_state:
@@ -35,18 +42,18 @@ def add_bg(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
-        st.markdown(f"""<style>.stApp {{ background: url(data:image/jpeg;base64,{encoded}); background-size: cover; background-attachment: fixed; }}</style>""", unsafe_allow_html=True)
+        st.markdown(f"""<style>.stApp {{ background: url(data:image/jpeg;base64,{encoded}); background-size: cover; background-attachment: fixed; }}</style>""", unsafe_html=True)
 
 # --- APP FLOW ---
 if st.session_state.step == 'start_screen':
-    if st.button("Click to Start Experience"):
+    # Button click par full screen trigger hoga
+    if st.button("Click to Experience", on_click=lambda: st.write('<script>triggerFullScreen();</script>', unsafe_allow_html=True)):
         st.session_state.step = 'intro'
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    # Video automatically full width mein dikhegi
     st.video("intro.mp4", autoplay=True)
-    time.sleep(10) # Jitni lambi video hai utna time yahan set karo
+    time.sleep(10) # Intro duration
     st.session_state.step = 'register'
     st.rerun()
 
@@ -82,14 +89,12 @@ elif st.session_state.step == 'quiz':
             if st.button(opt, key=btn_key):
                 st.session_state[f"clicked_{idx}"] = True
                 st.session_state[f"choice_{idx}"] = opt
-                if opt == item['correct answer']:
+                if opt == item.get('correct answer'):
                     st.session_state.score += 1
                 st.rerun()
         else:
-            # Color Feedback (Green for Correct, Red for Incorrect)
-            is_correct = (opt == item['correct answer'])
-            is_chosen = (opt == st.session_state.get(f"choice_{idx}"))
-            btn_type = "primary" if is_correct else ("secondary" if is_chosen else "secondary")
+            # Color Feedback Logic
+            btn_type = "primary" if opt == item.get('correct answer') else "secondary"
             st.button(opt, key=btn_key, type=btn_type, disabled=True)
 
     if st.session_state.get(f"clicked_{idx}"):
@@ -109,6 +114,5 @@ elif st.session_state.step == 'end':
         st.rerun()
         
     if st.session_state.show_page == "leaderboard":
-        st.write("--- LEADERBOARD ---")
         if os.path.exists('leaderboard.csv'):
             st.table(pd.read_csv('leaderboard.csv').sort_values(by='Score', ascending=False))
