@@ -145,6 +145,20 @@ elif st.session_state.step == 'end':
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
     
     st.subheader("🏆 Leaderboard")
+    # Leaderboard ke liye ek white background container banayein
+    with st.container():
+        st.markdown("""
+            <style>
+            div[data-testid="stTable"] {
+                background-color: white !important;
+                padding: 10px;
+                border-radius: 10px;
+            }
+            div[data-testid="stTable"] td, div[data-testid="stTable"] th {
+                color: black !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
     if os.path.exists('leaderboard.csv'):
         df = pd.read_csv('leaderboard.csv')
         st.table(df.sort_values(by='Score', ascending=False).head(10))
