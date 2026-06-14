@@ -292,11 +292,7 @@ elif st.session_state.step == 'end':
                     else:
                         st.error(f"Incorrect. The correct answer was: {correct}")
                     st.divider()
-
- import streamlit as st
-import pandas as pd
-import os
-
+                    
 # --- 1. QUIZ KA CODE (Jab tak quiz khatam nahi hota) ---
 if not st.session_state.get("quiz_finished", False):
     # Yahan tumhare 20 questions waala sara code aayega
