@@ -92,7 +92,7 @@ elif st.session_state.step == 'quiz':
     if f"options_{idx}" not in st.session_state:
         opts = [item['optionA'], item['optionB'], item['optionC'], item['optionD']]
         random.shuffle(option)
-        st.session_state[f"options_{idx}"] = option
+        st.session_state[f"opts_{idx}"] = opts
         
     st.subheader(f"Q{idx+1}: {item['question']}")
     ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
