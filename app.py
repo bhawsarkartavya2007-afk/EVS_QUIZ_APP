@@ -5,6 +5,45 @@ import time
 import base64
 import os
 st.markdown("""
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 'quiz' # Default page
+
+# --- SCREEN 1: QUIZ ---
+if st.session_state.current_page == 'quiz':
+    # Yahan 1 se 20 questions dikhao
+    # Jab submit button dabao aur 20 ho jayein:
+    # st.session_state.current_page = 'menu'
+    # st.rerun()
+
+# --- SCREEN 2: MAIN MENU (Details | Restart | Leaderboard) ---
+elif st.session_state.current_page == 'menu':
+    st.title("Quiz Finished!")
+    col1, col2, col3 = st.columns(3)
+    if col1.button("📝 Details"):
+        st.session_state.current_page = 'details'
+        st.rerun()
+    if col2.button("🔄 Restart"):
+        st.session_state.clear()
+        st.rerun()
+    if col3.button("🏆 Leaderboard"):
+        st.session_state.current_page = 'leaderboard'
+        st.rerun()
+
+# --- SCREEN 3: DETAILS PAGE ---
+elif st.session_state.current_page == 'details':
+    st.title("Detailed Results")
+    # Yahan sirf corrections dikhao
+    if st.button("⬅️ Back to Menu"):
+        st.session_state.current_page = 'menu'
+        st.rerun()
+
+# --- SCREEN 4: LEADERBOARD PAGE ---
+elif st.session_state.current_page == 'leaderboard':
+    st.title("Top 100 Players")
+    # Yahan sirf leaderboard dikhao
+    if st.button("⬅️ Back to Menu"):
+        st.session_state.current_page = 'menu'
+        st.rerun()
     <style>
     /* 1. Header, menu, footer hide karo */
     #MainMenu, header, footer {
