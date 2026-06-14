@@ -105,9 +105,11 @@ elif st.session_state.step == 'intro':
             <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
         </video>
     """, unsafe_allow_html=True)
+    # Audio ko alag se play karo
+st.audio("bg_music.mp3", autoplay=True, loop=True)
 
-    # Video chalne ka wait (10.4 seconds)
-    time.sleep(10.7) 
+    # Video chalne ka wait (11 seconds)
+    time.sleep(11) 
     st.session_state.step = 'register'
     st.rerun()
 elif st.session_state.step == 'register':
