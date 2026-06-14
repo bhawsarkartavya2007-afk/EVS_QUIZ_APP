@@ -11,48 +11,38 @@ st.set_page_config(page_title="EVS Quiz App", layout="wide")
 # --- CSS Styling ---
 st.markdown("""
     <style>
-    /* Portrait mode mein warning dikhane ke liye */
+    /* Puraane CSS ke sath yeh naya code add karein */
+    .stApp {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+    }
+    header, footer {visibility: hidden !important;}
+    
+    /* Portrait warning wala code jo humne pehle banaya tha */
     @media only screen and (orientation: portrait) {
         .portrait-warning {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: white;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: black;
-            text-align: center;
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: white; z-index: 9999; display: flex;
+            justify-content: center; align-items: center;
+            font-size: 24px; font-weight: bold; color: black;
+            text-align: center; padding: 20px;
         }
     }
-    /* Landscape mode mein warning hide rahegi */
     @media only screen and (orientation: landscape) {
-        .portrait-warning {
-            display: none;
-        }
+        .portrait-warning { display: none; }
     }
-
-    /* Puraana Styling */
-    #MainMenu, header, footer {visibility: hidden !important;}
-    .stApp { padding-top: 0px !important; margin-top: 0px !important; }
-    div[data-baseweb="input"] { background-color: white !important; }
-    div[data-baseweb="input"] input { color: black !important; }
     
-    video { width: 100% !important; height: auto !important; }
+    /* Baaki buttons aur styles... */
     .stButton > button {
         padding: 15px 30px; font-size: 18px; background-color: white !important; 
         color: black !important; border: 2px solid black !important;
         border-radius: 10px; font-weight: bold !important;
     }
-    .block-container { padding: 2rem !important; background: rgba(255, 255, 255, 0.2); border-radius: 20px; border: 2px solid rgba(0,0,0,0.9) }
-    audio { display: none !important; }
     </style>
     
     <div class="portrait-warning">
-        📱 Please rotate your device to LANDSCAPE mode for the best experience!
+        📱 Please rotate your device to LANDSCAPE mode!
     </div>
 """, unsafe_allow_html=True)
 
@@ -92,8 +82,25 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
-    st.video("intro.mp4", autoplay=True)
-    time.sleep(10.4) 
+    # Video container
+    st.markdown("""
+        <style>
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Yeh video ko zoom aur stretch karega poori screen ke liye */
+            z-index: -1;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Video display (HTML5 video tag)
+    st.markdown('<video class="video-container" autoplay playsinline muted src="intro.mp4"></video>', unsafe_allow_html=True)
+    
+    time.sleep(10.4)
     st.session_state.step = 'register'
     st.rerun()
 
