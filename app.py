@@ -255,27 +255,37 @@ elif st.session_state.step == 'end':
                     st.divider()
 
         # 3. Leaderboard Logic (Saaf aur Duplicate-free)
-        elif st.session_state.get("show_page") == "leaderboard":
-            st.write("### 🏆 Leaderboard")
+      if st.session_state.get("show_page") == "results":
+    st.subheader("📝 Detailed Results")
+    # 'st.container' ki jagah 'st.expander' use karo kyunki usme 'expanded=True' kaam karta hai
+    with st.expander("Click to see your detailed results", expanded=True):
+        for i, item in enumerate(st.session_state.user_responses):
+            st.write(f"**Question {i+1}:** {item['question']}")
+            st.write(f"Your choice: {item['user_choice']}")
             
-            # Score file handling
-            new_score = pd.DataFrame({'Name': [st.session_state.name], 'Score': [st.session_state.score]})
-            
-            if os.path.exists('leaderboard.csv'):
-                df = pd.read_csv('leaderboard.csv')
-                df = pd.concat([df, new_score], ignore_index=True)
+            # Yahan correction logic daal do
+            correct = item.get('correct_answer')
+            if item['user_choice'] == correct:
+                st.success("Correct!")
             else:
-                df = new_score
-            
-            # Duplicates hatao aur sort karo
-            df = df.drop_duplicates(subset=['Name', 'Score'], keep='last')
-            df = df.sort_values(by='Score', ascending=False).head(100)
-            df.to_csv('leaderboard.csv', index=False)
-            
-            # Index hatakar table dikhao
-            st.table(df.reset_index(drop=True))
+                st.error(f"Incorrect. The correct answer was: {correct}")
+            st.divider()
+    
+    if st.button("⬅️ Back to Main"):
+        st.session_state.show_page = "main"
+        st.rerun()
 
-        # 4. Restart button
-        if st.button("Restart Quiz"):
-            st.session_state.clear()
-            st.rerun()
+# 2. Leaderboard Page
+elif st.session_state.get("show_page") == "leaderboard":
+    st.subheader("🏆 Leaderboard")
+    
+    # Leaderboard logic jo tumne photo mein dikhaya tha
+    if os.path.exists('leaderboard.csv'):
+        df = pd.read_csv('leaderboard.csv')
+        # Sort aur display logic
+        df = df.sort_values(by='Score', ascending=False).head(100)
+        st.table(df.reset_index(drop=True))
+        
+    if st.button("⬅️ Back to Main"):
+        st.session_state.show_page = "main"
+        st.rerun()
