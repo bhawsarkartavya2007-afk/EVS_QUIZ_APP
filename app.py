@@ -241,7 +241,7 @@ elif st.session_state.step == 'end':
 
         # 2. Results Logic
         if st.session_state.get("show_page") == "results":
-            with st.container("Click to see your detailed results", expanded=True):
+            with st.expander("Click to see your detailed results", expanded=True):
                 for i, item in enumerate(st.session_state.user_responses):
                     st.write(f"**Question {i+1}:** {item['question']}")
                     st.write(f"Your choice: {item['user_choice']}")
