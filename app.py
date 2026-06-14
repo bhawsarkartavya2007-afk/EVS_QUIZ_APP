@@ -27,6 +27,8 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+if 'user_responses' not in st.session_state:
+    st.session_state.user_responses = []
 st.markdown("""
     <head>
         <link rel="manifest" href="static/site.webmanifest">
@@ -167,6 +169,11 @@ elif st.session_state.step == 'quiz':
     
     if st.button("Next"):
         st.session_state.user_answers[idx] = ans
+        st.session_state.user_responses.append({
+            "question": item['question'],
+            "user_choice": ans,
+            "correct_answer": item['answer']  # Ye tumhari Excel/Data mein jo column sahi answer ka hai, wahi likhna
+        })
         if idx < len(st.session_state.selected_qs) - 1:
             st.session_state.current_q_index += 1
             st.rerun()
@@ -182,7 +189,16 @@ elif st.session_state.step == 'end':
     st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
     st.success(f"Well done {st.session_state.name}!")
     st.subheader(f"Your Final Score: {st.session_state.score}/20")
-    
+   if st.button("View Detailed Results"):
+        for i, item in enumerate(st.session_state.user_responses):
+            st.write(f"**Question {i+1}:** {item['question']}")
+            st.write(f"Your choice: {item['user_choice']}")
+            
+            if item['user_choice'] == item['correct_answer']:
+                st.success("Correct!")
+            else:
+                st.error(f"Incorrect. The correct answer was: {item['correct_answer']}")
+            st.divider()
     score_data = pd.DataFrame({'Name': [st.session_state.name], 'Score': [st.session_state.score]})
     if os.path.exists('leaderboard.csv'):
         df_scores = pd.concat([pd.read_csv('leaderboard.csv'), score_data], ignore_index=True)
