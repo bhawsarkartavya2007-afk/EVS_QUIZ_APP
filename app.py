@@ -254,19 +254,24 @@ elif st.session_state.step == 'end':
                         st.error(f"Incorrect. The correct answer was: {correct}")
                     st.divider()
 
-   # --- 1. Quiz Khatam Hone Ka Logic ---
+ import streamlit as st
+import pandas as pd
+import os
+
+# --- 1. QUIZ KA CODE (Jab tak quiz khatam nahi hota) ---
 if not st.session_state.get("quiz_finished", False):
-    # --- Yahan apna pura purana quiz wala code paste karo ---
-    # (Questions 1 se 20 tak)
-    # 20th question submit hone par bas ye likho:
+    # Yahan tumhare 20 questions waala sara code aayega
+    # Jab 20th question submit ho jaye, toh bas ye likhna:
     # st.session_state.quiz_finished = True
     # st.rerun()
+    st.write("Quiz chal raha hai...") 
 
+# --- 2. RESULT KA CODE (Sirf quiz khatam hone ke baad) ---
 else:
-    # --- QUIZ KHATAM HONE KE BAAD KA CODE (Sirf yahan overlap nahi hoga) ---
     st.subheader("Quiz Completed! 🎉")
-    col1, col2, col3 = st.columns(3)
     
+    # Buttons ka menu
+    col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("📝 Details"):
             st.session_state.show_page = "results"
@@ -280,15 +285,28 @@ else:
             st.session_state.show_page = "leaderboard"
             st.rerun()
 
-    # --- Pages logic (Details ya Leaderboard) ---
+    # Page navigation logic
     if st.session_state.get("show_page") == "results":
-        # ... yahan details wala code ...
-        if st.button("⬅️ Back"):
+        st.subheader("📝 Detailed Results")
+        with st.expander("Click to see your detailed results", expanded=True):
+            for i, item in enumerate(st.session_state.user_responses):
+                st.write(f"**Q{i+1}:** {item['question']}")
+                st.write(f"Your choice: {item['user_choice']}")
+                if item['user_choice'] == item.get('correct_answer'):
+                    st.success("✅ Correct!")
+                else:
+                    st.error(f"❌ Incorrect. Correct was: {item.get('correct_answer')}")
+                st.divider()
+        if st.button("⬅️ Back to Menu"):
             st.session_state.show_page = None
             st.rerun()
-    
+
     elif st.session_state.get("show_page") == "leaderboard":
-        # ... yahan leaderboard wala code ...
-        if st.button("⬅️ Back"):
+        st.subheader("🏆 Leaderboard")
+        if os.path.exists('leaderboard.csv'):
+            df = pd.read_csv('leaderboard.csv')
+            df = df.sort_values(by='Score', ascending=False).head(100)
+            st.table(df)
+        if st.button("⬅️ Back to Menu"):
             st.session_state.show_page = None
             st.rerun()
