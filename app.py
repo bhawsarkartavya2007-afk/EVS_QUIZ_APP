@@ -4,46 +4,56 @@ import random
 import time
 import base64
 import os
+# 1. CSS (Ise top par rehne do)
 st.markdown("""
-if 'current_page' not in st.session_state:
-    st.session_state.current_page = 'quiz' # Default page
+    <style>
+    #MainMenu, header, footer { visibility: hidden !important; }
+    .stApp { padding-top: 0px !important; margin-top: 0px !important; }
+    </style>
+""", unsafe_allow_html=True)
 
-# --- SCREEN 1: QUIZ ---
-if st.session_state.current_page == 'quiz':
-    # Yahan 1 se 20 questions dikhao
-    # Jab submit button dabao aur 20 ho jayein:
-    # st.session_state.current_page = 'menu'
-    # st.rerun()
+# 2. Session state setup
+if 'question_index' not in st.session_state:
+    st.session_state.question_index = 0
+    st.session_state.score = 0
+    st.session_state.quiz_finished = False
 
-# --- SCREEN 2: MAIN MENU (Details | Restart | Leaderboard) ---
-elif st.session_state.current_page == 'menu':
-    st.title("Quiz Finished!")
-    col1, col2, col3 = st.columns(3)
-    if col1.button("📝 Details"):
-        st.session_state.current_page = 'details'
+# 3. Quiz ka Logic
+if not st.session_state.quiz_finished:
+    # Yahan apne questions ki list banao
+    questions = [
+        {"q": "Q1: Swachh Bharat Abhiyan kab shuru hua?", "options": ["2014", "2015", "2016"], "ans": "2014"},
+        # ... apne baaki questions yahan add karo ...
+    ]
+    
+    if st.session_state.question_index < len(questions):
+        q_data = questions[st.session_state.question_index]
+        st.write(q_data["q"])
+        user_choice = st.radio("Options:", q_data["options"], key="radio")
+        
+        if st.button("Submit"):
+            if user_choice == q_data["ans"]:
+                st.success("✅ Sahi Jawab!")
+                st.session_state.score += 1
+            else:
+                st.error(f"❌ Galat! Sahi jawab: {q_data['ans']}")
+            
+            time.sleep(2) # 2 sec ruk kar next question
+            st.session_state.question_index += 1
+            st.rerun()
+    else:
+        st.session_state.quiz_finished = True
         st.rerun()
-    if col2.button("🔄 Restart"):
+
+# 4. Quiz Khatam hone par
+else:
+    st.write(f"Quiz khatam! Tumhare points: {st.session_state.score}")
+    if st.button("🏆 Leaderboard"):
+        st.write("Leaderboard dikha raha hoon...")
+    if st.button("🔄 Restart"):
         st.session_state.clear()
         st.rerun()
-    if col3.button("🏆 Leaderboard"):
-        st.session_state.current_page = 'leaderboard'
-        st.rerun()
-
-# --- SCREEN 3: DETAILS PAGE ---
-elif st.session_state.current_page == 'details':
-    st.title("Detailed Results")
-    # Yahan sirf corrections dikhao
-    if st.button("⬅️ Back to Menu"):
-        st.session_state.current_page = 'menu'
-        st.rerun()
-
-# --- SCREEN 4: LEADERBOARD PAGE ---
-elif st.session_state.current_page == 'leaderboard':
-    st.title("Top 100 Players")
-    # Yahan sirf leaderboard dikhao
-    if st.button("⬅️ Back to Menu"):
-        st.session_state.current_page = 'menu'
-        st.rerun()
+st.markdown("""
     <style>
     /* 1. Header, menu, footer hide karo */
     #MainMenu, header, footer {
