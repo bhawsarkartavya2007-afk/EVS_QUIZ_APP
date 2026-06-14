@@ -107,6 +107,7 @@ elif st.session_state.step == 'intro':
     """, unsafe_allow_html=True)
     # Audio ko alag se play karo
 st.audio("bg_music.mp3", autoplay=True, loop=True)
+
 # 2. ye lines `elif` ke level par honi chahiye (ek tab peeche)
     time.sleep(11)
     st.session_state.step = 'register'
