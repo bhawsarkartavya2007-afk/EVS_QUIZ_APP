@@ -132,6 +132,7 @@ if st.session_state.step == 'start_screen':
         st.rerun()
 
 elif st.session_state.step == 'intro':
+    with st.expander("Watch Intro Video", expanded=True):
     st.video("intro.mp4", autoplay=True)
     time.sleep(10.4) 
     st.session_state.step = 'register'
@@ -184,34 +185,71 @@ elif st.session_state.step == 'quiz':
             st.rerun()
 
 elif st.session_state.step == 'end':
-    add_bg("wallpaper.jpg")
-    # Audio yahan bhi loop mein aur hidden
-    st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
-    st.success(f"Well done {st.session_state.name}!")
-    st.subheader(f"Your Final Score: {st.session_state.score}/20")
-    if st.button("View Detailed Results"):
-      with st.expander("Click to see your detailed results"):
-        for i, item in enumerate(st.session_state.user_responses):
-            st.write(f"**Question {i+1}:** {item['question']}")
-            st.write(f"Your choice: {item['user_choice']}")
+    st.markdown("""
+            <style>
+            /* Expander (Results) aur Table (Leaderboard) ka background white */
+            div[data-testid="stExpander"], div[data-testid="stTable"], .stTable {
+                background-color: #FFFFFF !important;
+                padding: 20px;
+                border-radius: 10px;
+            }
+            /* Text ka color black kar rahe hain taaki white background par dikhe */
+            div[data-testid="stExpander"], .stTable, .stTable td, .stTable th {
+                color: black !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+   add_bg("wallpaper.jpg")
+        st.audio('bg_music.mp3', format='audio/mp3', autoplay=True, loop=True)
+        st.success(f"Well done {st.session_state.name}!")
+        st.subheader(f"Your Final Score: {st.session_state.score}/20")
+        
+        # 1. Buttons
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("View Detailed Results"):
+                st.session_state.show_page = "results"
+        with col2:
+            if st.button("View Leaderboard"):
+                st.session_state.show_page = "leaderboard"
+
+        # 2. Results Logic
+        if st.session_state.get("show_page") == "results":
+            with st.expander("Click to see your detailed results", expanded=True):
+                for i, item in enumerate(st.session_state.user_responses):
+                    st.write(f"**Question {i+1}:** {item['question']}")
+                    st.write(f"Your choice: {item['user_choice']}")
+                    
+                    # 'correct_answer' key check karke error hatao
+                    correct = item.get('correct_answer')
+                    if item['user_choice'] == correct:
+                        st.success("Correct!")
+                    else:
+                        st.error(f"Incorrect. The correct answer was: {correct}")
+                    st.divider()
+
+        # 3. Leaderboard Logic (Saaf aur Duplicate-free)
+        elif st.session_state.get("show_page") == "leaderboard":
+            st.write("### 🏆 Leaderboard")
             
-            if item['user_choice'] == item['correct_answer']:
-                st.success("Correct!")
+            # Score file handling
+            new_score = pd.DataFrame({'Name': [st.session_state.name], 'Score': [st.session_state.score]})
+            
+            if os.path.exists('leaderboard.csv'):
+                df = pd.read_csv('leaderboard.csv')
+                df = pd.concat([df, new_score], ignore_index=True)
             else:
-                st.error(f"Incorrect. The correct answer was: {item['correct_answer']}")
-            st.divider()
-    score_data = pd.DataFrame({'Name': [st.session_state.name], 'Score': [st.session_state.score]})
-    if os.path.exists('leaderboard.csv'):
-        df_scores = pd.concat([pd.read_csv('leaderboard.csv'), score_data], ignore_index=True)
-    else:
-        df_scores = score_data
-        df_scores = df_scores.drop_duplicates(subset=['Name', 'Score'], keep='last')
-    df_scores = df_scores.sort_values(by='Score', ascending=False).head(10)
-    df_scores.to_csv('leaderboard.csv', index=False)
-    
-    st.write("### 🏆 Leaderboard")
-    st.table(df_scores.sort_values(by='Score', ascending=False).head(10))
-    
-    if st.button("Restart Quiz"):
-        st.session_state.clear()
-        st.rerun()
+                df = new_score
+            
+            # Duplicates hatao aur sort karo
+            df = df.drop_duplicates(subset=['Name', 'Score'], keep='last')
+            df = df.sort_values(by='Score', ascending=False).head(100)
+            df.to_csv('leaderboard.csv', index=False)
+            
+            # Index hatakar table dikhao
+            st.table(df.reset_index(drop=True))
+
+        # 4. Restart button
+        if st.button("Restart Quiz"):
+            st.session_state.clear()
+            st.rerun()
