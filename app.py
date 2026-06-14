@@ -105,7 +105,7 @@ elif st.session_state.step == 'quiz':
     if not st.session_state[f"answered_{idx}"]:
         ans = st.radio("Choose the correct option:", st.session_state[f"options_{idx}"], key=f"q_{idx}")
         
-       if st.button("Submit Answer"):
+        if st.button("Submit Answer"):
             st.session_state[f"answered_{idx}"] = True # Lock lag gaya
             
             # Answer ko normalize karein
