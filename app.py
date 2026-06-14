@@ -11,12 +11,36 @@ st.set_page_config(page_title="EVS Quiz App", layout="wide")
 # --- CSS Styling ---
 st.markdown("""
     <style>
+    /* Portrait mode mein warning dikhane ke liye */
+    @media only screen and (orientation: portrait) {
+        .portrait-warning {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: white;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            padding: 20px;
+        }
+    }
+    /* Landscape mode mein warning hide rahegi */
+    @media only screen and (orientation: landscape) {
+        .portrait-warning {
+            display: none;
+        }
+    }
+
+    /* Puraana Styling */
     #MainMenu, header, footer {visibility: hidden !important;}
     .stApp { padding-top: 0px !important; margin-top: 0px !important; }
     div[data-baseweb="input"] { background-color: white !important; }
     div[data-baseweb="input"] input { color: black !important; }
     
-    /* Video aur Button Styling */
     video { width: 100% !important; height: auto !important; }
     .stButton > button {
         padding: 15px 30px; font-size: 18px; background-color: white !important; 
@@ -26,6 +50,10 @@ st.markdown("""
     .block-container { padding: 2rem !important; background: rgba(255, 255, 255, 0.2); border-radius: 20px; border: 2px solid rgba(0,0,0,0.9) }
     audio { display: none !important; }
     </style>
+    
+    <div class="portrait-warning">
+        📱 Please rotate your device to LANDSCAPE mode for the best experience!
+    </div>
 """, unsafe_allow_html=True)
 
 # --- Background Image Function ---
